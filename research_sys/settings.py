@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'apps.users',
+    'apps.research',
 ]
 
 AUTH_USER_MODEL = 'users.UserInfo'
@@ -87,6 +88,18 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# 配置mongodb
+MONGODB_DATABASES = {
+    "default": {
+        "name": "test",
+        "host": '127.0.0.1',
+        "tz_aware": True,  # 设置时区
+    },
+}
+from mongoengine import connect
+
+connect('test', host='127.0.0.1', port=27017)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
