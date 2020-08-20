@@ -50,7 +50,7 @@ AUTH_USER_MODEL = 'users.UserInfo'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # 解决跨域
+    'corsheaders.middleware.CorsMiddleware',  # Solve CORS
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -89,14 +89,7 @@ DATABASES = {
     }
 }
 
-# 配置mongodb
-MONGODB_DATABASES = {
-    "default": {
-        "name": "test",
-        "host": '127.0.0.1',
-        "tz_aware": True,  # 设置时区
-    },
-}
+# Configure mongo
 from mongoengine import connect
 
 connect('test', host='127.0.0.1', port=27017)
@@ -149,7 +142,7 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PAGINATION_CLASS': 'utils.custom_page_set.PageSet',
 }
-# 解决跨域
+# Solve CORS
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
