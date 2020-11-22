@@ -17,7 +17,7 @@ pnpm-debug.log*
 .idea
 .vscode
 __pycache__
-*/__pycache__
+*.pyc
 *.suo
 *.ntvs*
 *.njsproj

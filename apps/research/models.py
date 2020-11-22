@@ -4,10 +4,6 @@ from utils.base_model import MongoBaseModel
 
 
 class ResearchList(MongoBaseModel):
-    ONCE_ITEMS = (
-        (0, '不可重复填写'),
-        (1, '可重复填写')
-    )
     STATUS_ITEMS = (
         (0, '停止收集'),
         (1, '正常收集')
@@ -17,7 +13,6 @@ class ResearchList(MongoBaseModel):
     fieldsValue = DictField(required=True, verbose_name='字段值')
     detail = ListField(required=True, verbose_name='调研表')
     rules = DictField(required=True, verbose_name='验证字段值')
-    once = IntField(default=0, choices=ONCE_ITEMS, verbose_name='重复')
     confirm = StringField(max_length=10, default='提交', verbose_name='提交按钮文字')
     status = IntField(default=1, choices=STATUS_ITEMS, verbose_name='状态')
 
@@ -30,7 +25,7 @@ class ResearchList(MongoBaseModel):
 
 class ResearchData(MongoBaseModel):
     research_id = StringField(required=True, verbose_name='调研id')
-    # user = DictField(required=True, verbose_name='用户信息')
+    user = DictField(required=True, verbose_name='用户信息')
     detail = DictField(required=True, verbose_name='调研数据')
 
     @queryset_manager

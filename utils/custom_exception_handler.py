@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework.exceptions import ValidationError, NotAuthenticated
 from rest_framework.views import exception_handler
 from rest_framework_simplejwt.exceptions import InvalidToken
@@ -29,7 +30,10 @@ def custom_exception_handler(exc, context):
         else:
             ret['code'] = exc.status_code
             ret['msg'] = '未知错误。'
-            response.data = ret
+    elif isinstance(exc, Http404):
+        ret['code'] = 200
+        ret['msg'] = '未找到'
+        response.data = ret
     return response
 
 # | *状态码* | *含义*                | *说明*                                              |
