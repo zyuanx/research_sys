@@ -1,16 +1,17 @@
 from django.contrib.auth import authenticate
-from django.http import JsonResponse
 
-from rest_framework import viewsets, mixins
+from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.users.models import UserInfo
-from apps.users.serializers import UserReadSerializer, UserRegisterSerializer, UserAuthSerializer
+from apps.users.serializers import UserReadSerializer, UserRegisterSerializer, UserAuthSerializer, UserLogoutSerializer
+from utils.custom_response.base_response import BaseResponse
 
 
-class UserRegisterViewSet(mixins.CreateModelMixin, GenericViewSet):
+class UserRegisterViewSet(mixins.CreateModelMixin,
+                          GenericViewSet):
     """
     用户注册、添加视图
     """
@@ -19,15 +20,13 @@ class UserRegisterViewSet(mixins.CreateModelMixin, GenericViewSet):
     serializer_class = UserRegisterSerializer
     queryset = UserInfo.objects.all()
 
-    ret = {'code': 201, 'msg': '创建用户成功', 'data': {}}
-
     def create(self, request, *args, **kwargs):
         response = super(UserRegisterViewSet, self).create(request, *args, **kwargs)
-        self.ret['data'] = response.data
-        return JsonResponse(self.ret)
+        return BaseResponse(message="创建成功", data=response.data)
 
 
-class UserAuthViewSet(mixins.CreateModelMixin, GenericViewSet):
+class UserAuthViewSet(mixins.CreateModelMixin,
+                      GenericViewSet):
     """
     用户认证视图
     """
@@ -35,7 +34,6 @@ class UserAuthViewSet(mixins.CreateModelMixin, GenericViewSet):
     permission_classes = []
     serializer_class = UserAuthSerializer
     queryset = UserInfo.objects.all()
-    ret = {'code': 200, 'msg': '认证信息获取成功', 'data': {}}
 
     def create(self, request, *args, **kwargs):
         username = request.data.get('username')
@@ -47,10 +45,9 @@ class UserAuthViewSet(mixins.CreateModelMixin, GenericViewSet):
                 'token': str(refresh.access_token),
                 'refresh': str(refresh),
             }
-            self.ret['data'] = token_data
-            return JsonResponse(self.ret)
+            return BaseResponse(message="认证成功", data=token_data)
         else:
-            return JsonResponse({'code': 400, 'msg': '用户名或密码错误'})
+            return BaseResponse(code=20001, message="用户名或密码错误")
 
 
 class UserReadViewSet(mixins.UpdateModelMixin,
@@ -62,10 +59,23 @@ class UserReadViewSet(mixins.UpdateModelMixin,
     permission_classes = [IsAuthenticated]
     serializer_class = UserReadSerializer
     queryset = UserInfo.objects.all().order_by('created_time')
-    ret = {'code': 200, 'msg': '用户信息获取成功', 'data': {}}
 
     def list(self, request, *args, **kwargs):
         instance = request.user
         serializer = self.get_serializer(instance)
-        self.ret['data'] = serializer.data
-        return JsonResponse(self.ret)
+        return BaseResponse(message='信息获取成功', data=serializer.data)
+
+
+class UserLogoutViewSet(mixins.CreateModelMixin,
+                        GenericViewSet):
+    """
+    退出
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserLogoutSerializer
+    queryset = UserInfo.objects.all().order_by('created_time')
+
+    def create(self, request, *args, **kwargs):
+        instance = request.user
+        RefreshToken.for_user(instance)
+        return BaseResponse(message='退出成功')

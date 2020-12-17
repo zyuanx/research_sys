@@ -9,6 +9,7 @@ from rest_framework_mongoengine.viewsets import GenericViewSet
 
 from apps.research.models import ResearchList, ResearchData
 from apps.research.serializers import ResearchListSerializer, ResearchDataSerializer
+from utils.custom_response.base_response import BaseResponse
 
 
 class ResearchListViewSet(viewsets.ModelViewSet):
@@ -21,42 +22,24 @@ class ResearchListViewSet(viewsets.ModelViewSet):
         return super(ResearchListViewSet, self).get_permissions()
 
     def list(self, request, *args, **kwargs):
-        ret = {'code': 200, 'msg': '', 'data': {}}
         response = super(ResearchListViewSet, self).list(request, *args, **kwargs)
-        ret['code'] = 200
-        ret['msg'] = '调研列表信息获取成功'
-        ret['data'] = response.data
-        return JsonResponse(ret)
+        return BaseResponse(message="调研信息获取成功", data=response.data)
 
     def create(self, request, *args, **kwargs):
-        ret = {'code': 200, 'msg': '', 'data': {}}
         response = super(ResearchListViewSet, self).create(request, *args, **kwargs)
-        ret['code'] = 201
-        ret['msg'] = '调研问卷创建成功'
-        ret['data'] = response.data
-        return JsonResponse(ret)
+        return BaseResponse(message="调研问卷创建成功", data=response.data)
 
     def retrieve(self, request, *args, **kwargs):
-        ret = {'code': 200, 'msg': '', 'data': {}}
         response = super(ResearchListViewSet, self).retrieve(request, *args, **kwargs)
-        ret['code'] = 200
-        ret['msg'] = '调研信息获取成功'
-        ret['data'] = response.data
-        return JsonResponse(ret)
+        return BaseResponse(message="调研信息获取成功", data=response.data)
 
     def partial_update(self, request, *args, **kwargs):
-        ret = {'code': 200, 'msg': '', 'data': {}}
         response = super(ResearchListViewSet, self).partial_update(request, *args, **kwargs)
-        ret['code'] = 201
-        ret['msg'] = '调研更新成功'
-        ret['data'] = response.data
-        return JsonResponse(ret)
+        return BaseResponse(message="调研更新成功", data=response.data)
 
     def destroy(self, request, *args, **kwargs):
-        ret = {'code': 204, 'msg': ''}
         super(ResearchListViewSet, self).destroy(request, *args, **kwargs)
-        ret['msg'] = '删除成功'
-        return JsonResponse(ret)
+        return BaseResponse(message="调研删除成功")
 
 
 class ResearchDataViewSet(mixins.CreateModelMixin,
@@ -89,21 +72,13 @@ class ResearchDataViewSet(mixins.CreateModelMixin,
 
     # 获取数据
     def list(self, request, *args, **kwargs):
-        ret = {'data': {}, 'msg': "", 'code': 200, }
         response = super(ResearchDataViewSet, self).list(request, *args, **kwargs)
-        ret['code'] = 200
-        ret['msg'] = '数据获取成功'
-        ret['data'] = response.data
-        return JsonResponse(ret)
+        return BaseResponse(message="数据获取成功", data=response.data)
 
     # 提交数据
     def create(self, request, *args, **kwargs):
-        ret = {'data': {}, 'msg': "success", 'code': 200, }
         response = super(ResearchDataViewSet, self).create(request, *args, **kwargs)
-        ret['code'] = 201
-        ret['msg'] = '提交成功'
-        ret['data'] = response.data
-        return JsonResponse(ret)
+        return BaseResponse(message="数据提交成功", data=response.data)
 
 
 def export_xlsx(title, data, filename):

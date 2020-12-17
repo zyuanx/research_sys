@@ -39,3 +39,10 @@ class UserReadSerializer(BaseModelSerializer):
     class Meta:
         model = UserInfo
         fields = ['id', 'nickname', 'avatar', 'username', 'created_time', 'modified_time']
+
+
+class UserLogoutSerializer(BaseModelSerializer):
+
+    class Meta:
+        model = UserInfo
+        fields = []

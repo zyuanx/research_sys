@@ -10,12 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from datetime import timedelta
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -45,7 +44,6 @@ INSTALLED_APPS = [
 
     'apps.users',
     'apps.research',
-    'apps.visit',
 ]
 
 AUTH_USER_MODEL = 'users.UserInfo'
@@ -66,7 +64,7 @@ ROOT_URLCONF = 'research_sys.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [BASE_DIR / 'templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -88,14 +86,22 @@ WSGI_APPLICATION = 'research_sys.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-# Configure mongo
-from mongoengine import connect
+MONGODB_DATABASES = {
+    "default": {
+        "name": 'test',
+        "host": '127.0.0.1',
+        "username": 'admin',
+        "password": '123456',
+        "authentication_source": 'admin',
+        "tz_aware": False,  # if you using timezones in django (USE_TZ = True)
+    },
+}
 
-connect('test', host='127.0.0.1', port=27017)
+INSTALLED_APPS += ["django_mongoengine"]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -132,16 +138,17 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'EXCEPTION_HANDLER': 'utils.custom_exception_handler.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'utils.custom_response.custom_exception_handler.custom_exception_handler',
 
     'DEFAULT_PAGINATION_CLASS': 'utils.custom_page_set.PageSet',
 }

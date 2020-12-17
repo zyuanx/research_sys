@@ -43,10 +43,18 @@ pip install -r requirements.txt
 Edit `research_sys/setting.py` file and modify mongo as your own database.
 
 ```python
-# Configure mongo
-from mongoengine import connect
+MONGODB_DATABASES = {
+    "default": {
+        "name": 'test',
+        "host": '127.0.0.1',
+        "username": 'admin',
+        "password": '123456',
+        "authentication_source": 'admin',
+        "tz_aware": False,  # if you using timezones in django (USE_TZ = True)
+    },
+}
 
-connect('test', host='127.0.0.1', port=27017)
+INSTALLED_APPS += ["django_mongoengine"]
 ```
 
 ### Run
@@ -55,20 +63,14 @@ connect('test', host='127.0.0.1', port=27017)
 python manage.py runserver
 ```
 
-
-
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-## Contact
-
-zyuanlee - zyuanlee@cumt.edu.cn
-
-Project Link: [https://github.com/Pandalzy/research_sys](https://github.com/Pandalzy/research_sys)
 
 ## Acknowledgements
 
 - [django-rest-framework](https://www.django-rest-framework.org/)
 - [django-rest-framework-mongoengine](http://umutbozkurt.github.io/django-rest-framework-mongoengine/)
+- [django-mongoengine](https://github.com/MongoEngine/django-mongoengine)
 - [django-rest-framework-simplejwt](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/)
+

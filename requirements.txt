@@ -1,14 +1,15 @@
-asgiref==3.2.7
+asgiref==3.3.1
 certifi==2020.6.20
 chardet==3.0.4
 coreapi==2.3.3
 coreschema==0.0.4
 defusedxml==0.6.0
 diff-match-patch==20200713
-Django==3.0.3
+Django==3.1.4
 django-cors-headers==3.4.0
 django-excel-base==1.0.4
 django-filter==2.3.0
+django-mongoengine==0.4.4
 django-rest-framework-mongoengine==3.4.1
 django-six==1.0.4
 djangorestframework==3.11.0
@@ -20,7 +21,7 @@ jdcal==1.4.1
 Jinja2==2.11.2
 MarkupPy==1.14
 MarkupSafe==1.1.1
-mongoengine==0.20.0
+mongoengine==0.22.0
 mysqlclient==2.0.1
 odfpy==1.4.1
 openpyxl==3.0.5
@@ -31,6 +32,7 @@ pytz==2020.1
 PyYAML==5.3.1
 requests==2.24.0
 screen==1.0.1
+six==1.15.0
 sqlparse==0.3.1
 tablib==2.0.0
 uritemplate==3.0.1

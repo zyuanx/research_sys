@@ -13,7 +13,7 @@ class BaseResponse(Response):
         self._message = message
         self._data = data
 
-        self.data = {"code": code, "msg": message, "data": data}
+        self.data = {"code": code, "message": message, "data": data}
         self.template_name = template_name
         self.exception = exception
         self.content_type = content_type
