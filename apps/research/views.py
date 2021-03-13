@@ -3,13 +3,13 @@ import os
 
 from django.conf import settings
 from django.http import JsonResponse, FileResponse
-from rest_framework import mixins
+from rest_framework import mixins, status
+from rest_framework.response import Response
 from rest_framework_mongoengine import viewsets
 from rest_framework_mongoengine.viewsets import GenericViewSet
 
 from apps.research.models import ResearchList, ResearchData
-from apps.research.serializers import ResearchListSerializer, ResearchDataSerializer
-from utils.custom_response.base_response import BaseResponse
+from apps.research.serializers import ResearchListSerializer, ResearchDataSerializer, UserInfoSerializer
 
 
 class ResearchListViewSet(viewsets.ModelViewSet):
@@ -20,26 +20,6 @@ class ResearchListViewSet(viewsets.ModelViewSet):
         if self.action == 'retrieve':
             return []
         return super(ResearchListViewSet, self).get_permissions()
-
-    def list(self, request, *args, **kwargs):
-        response = super(ResearchListViewSet, self).list(request, *args, **kwargs)
-        return BaseResponse(message="调研信息获取成功", data=response.data)
-
-    def create(self, request, *args, **kwargs):
-        response = super(ResearchListViewSet, self).create(request, *args, **kwargs)
-        return BaseResponse(message="调研问卷创建成功", data=response.data)
-
-    def retrieve(self, request, *args, **kwargs):
-        response = super(ResearchListViewSet, self).retrieve(request, *args, **kwargs)
-        return BaseResponse(message="调研信息获取成功", data=response.data)
-
-    def partial_update(self, request, *args, **kwargs):
-        response = super(ResearchListViewSet, self).partial_update(request, *args, **kwargs)
-        return BaseResponse(message="调研更新成功", data=response.data)
-
-    def destroy(self, request, *args, **kwargs):
-        super(ResearchListViewSet, self).destroy(request, *args, **kwargs)
-        return BaseResponse(message="调研删除成功")
 
 
 class ResearchDataViewSet(mixins.CreateModelMixin,
@@ -70,15 +50,14 @@ class ResearchDataViewSet(mixins.CreateModelMixin,
             queryset = queryset.filter(**filtering_kwargs)
         return queryset
 
-    # 获取数据
-    def list(self, request, *args, **kwargs):
-        response = super(ResearchDataViewSet, self).list(request, *args, **kwargs)
-        return BaseResponse(message="数据获取成功", data=response.data)
-
-    # 提交数据
     def create(self, request, *args, **kwargs):
-        response = super(ResearchDataViewSet, self).create(request, *args, **kwargs)
-        return BaseResponse(message="数据提交成功", data=response.data)
+        data = request.data
+        data['user'] = UserInfoSerializer(request.user).data
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 def export_xlsx(title, data, filename):

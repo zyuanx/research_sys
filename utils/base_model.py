@@ -18,8 +18,9 @@ class MongoBaseModel(Document):
 
 
 class BaseModel(models.Model):
-    created_time = models.DateTimeField(auto_now_add=True, blank=True, verbose_name='创建时间')
-    modified_time = models.DateTimeField(auto_now=True, blank=True, verbose_name='修改时间')
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间', help_text='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='修改时间', help_text='修改时间')
+    is_deleted = models.BooleanField(default=False, verbose_name='删除标记', help_text='删除标记')
 
     class Meta:
         abstract = True

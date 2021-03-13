@@ -42,11 +42,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
 
-    'apps.users',
+    'apps.rbac',
     'apps.research',
+    'apps.web',
 ]
 
-AUTH_USER_MODEL = 'users.UserInfo'
+AUTH_USER_MODEL = 'rbac.UserInfo'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -97,7 +98,7 @@ MONGODB_DATABASES = {
         "username": 'admin',
         "password": '123456',
         "authentication_source": 'admin',
-        "tz_aware": False,  # if you using timezones in django (USE_TZ = True)
+        "tz_aware": False,
     },
 }
 
@@ -148,7 +149,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'EXCEPTION_HANDLER': 'utils.custom_response.custom_exception_handler.custom_exception_handler',
+    'DEFAULT_RENDERER_CLASSES': ('utils.response.FitJSONRenderer',),
 
     'DEFAULT_PAGINATION_CLASS': 'utils.custom_page_set.PageSet',
 }

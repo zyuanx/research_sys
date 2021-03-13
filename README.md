@@ -6,7 +6,7 @@
 
 ### Api docs
 
-![](https://gitee.com/pandalzy/cloud_img/raw/master/imgs/20200820102208.png)
+![](./assert/apidocs.png)
 
 ### Built With
 
@@ -40,7 +40,7 @@ pip install -r requirements.txt
 
 ### Configuration
 
-Edit `research_sys/setting.py` file and modify mongo as your own database.
+Edit `research_sys/setting.py` file and modify as your own database.
 
 ```python
 MONGODB_DATABASES = {
