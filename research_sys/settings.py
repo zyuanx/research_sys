@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'corsheaders',
-
     'rest_framework',
     'django_filters',
+    'django_mongoengine',
 
     'apps.rbac',
     'apps.research',
@@ -81,29 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'research_sys.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-MONGODB_DATABASES = {
-    "default": {
-        "name": 'test',
-        "host": '127.0.0.1',
-        "username": 'admin',
-        "password": '123456',
-        "authentication_source": 'admin',
-        "tz_aware": False,
-    },
-}
-
-INSTALLED_APPS += ["django_mongoengine"]
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -133,7 +109,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -144,20 +120,7 @@ STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-    'DEFAULT_RENDERER_CLASSES': ('utils.response.FitJSONRenderer',),
-
-    'DEFAULT_PAGINATION_CLASS': 'utils.custom_page_set.PageSet',
-}
-# Solve CORS
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-}
+from research_sys.config.cors import *
+from research_sys.config.database import *
+from research_sys.config.drf import *
+from research_sys.config.drf_jwt import *
