@@ -23,14 +23,21 @@ class RbacPermission(BasePermission):
         """
         if not hasattr(view, 'permission_prefix'):
             return True
+        permission_prefix = view.permission_prefix
+        if not hasattr(view, 'skip_action'):
+            skip_action = {}
+        else:
+            skip_action = view.skip_action
+        action = view.action
+        print('action: {}'.format(action))
+
+        if action in skip_action:
+            return True
 
         perms = self.get_permission_from_role(request)
+        print('perms: {}'.format(perms))
         if not perms:
             return False
-
-        perms_prefix = view.permission_prefix
-        _method = view.action
-        if perms_prefix + '_' + _method in perms:
+        if permission_prefix + '_' + action in perms:
             return True
-        else:
-            return False
+        return False

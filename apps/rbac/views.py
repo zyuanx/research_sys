@@ -1,16 +1,14 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
-from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.status import *
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.rbac.models import UserInfo, Permission, Role
-from apps.rbac.serializers import PermissionSerializer, RoleSerializer, UserAuthLoginSerializer, \
-    UserAuthInfoSerializer, UserAuthLogoutSerializer, ChangePasswordSerializer, UserInfoSerializer, UserBlankSerializer, \
-    PasswordSerializer
+from apps.rbac.serializers import *
 
 
 class PermissionViewSet(ModelViewSet):
@@ -29,7 +27,7 @@ class UserViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = UserInfo.objects.all()
 
-    permission_prefix = 'userinfo'
+    permission_prefix = 'permission_prefix'
 
     def get_serializer_class(self):
         serializer_class = UserInfoSerializer
@@ -50,9 +48,9 @@ class UserViewSet(ModelViewSet):
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 class UserAuthViewSet(GenericViewSet):
@@ -81,7 +79,7 @@ class UserAuthViewSet(GenericViewSet):
     def login(self, request):
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            return Response(serializer.errors, status=400)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
         username = serializer.data.get('username')
         password = serializer.data.get('password')
@@ -94,7 +92,7 @@ class UserAuthViewSet(GenericViewSet):
             }
             return Response(token_data)
         else:
-            return Response('用户名或密码错误', status=403)
+            return Response('用户名或密码错误', status=HTTP_401_UNAUTHORIZED)
 
     @action(detail=False, methods=['get'])
     def info(self, request):
@@ -113,9 +111,9 @@ class UserAuthViewSet(GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             if not check_password(serializer.data.get('old_password'), instance.password):
-                return Response('旧密码错误', status=400)
+                return Response('旧密码错误', status=HTTP_400_BAD_REQUEST)
             instance.set_password(serializer.data.get('new_password2'))
             instance.save()
             return Response('密码重置成功')
         else:
-            return Response(serializer.errors, status=400)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

@@ -9,7 +9,7 @@ class BaseResponse:
     def __init__(self):
         self.code = 200
         self.data = None
-        self.msg = None
+        self.message = None
 
     @property
     def dict(self):
@@ -25,7 +25,7 @@ class FitJSONRenderer(JSONRenderer):
         """
         如果使用这个render，
         普通的response将会被包装成：
-            {"code":200,"data":"X","msg":"X"}
+            {"code":200,"data":"X","message":"X"}
         这样的结果
         使用方法：
             - 全局
@@ -36,16 +36,16 @@ class FitJSONRenderer(JSONRenderer):
                 class UserCountView(APIView):
                     renderer_classes = [FitJSONRenderer]
 
-        :param data: {"msg":"X"}
+        :param data: {"message":"X"}
         :param accepted_media_type:
         :param renderer_context:
-        :return: {"code":200,"data":"X","msg":"X"}
+        :return: {"code":200,"data":"X","message":"X"}
         """
         response_body = BaseResponse()
         response = renderer_context.get("response")
         response_body.code = response.status_code
         if response_body.code >= 400:  # 响应异常
-            response_body.msg = data['detail'] if 'detail' in data else data
+            response_body.message = data['detail'] if 'detail' in data else data
         else:
             response_body.data = data
         renderer_context.get("response").status_code = 200  # 统一成200响应,用code区分
