@@ -43,7 +43,6 @@ INSTALLED_APPS = [
 
     'apps.rbac',
     'apps.research',
-    'apps.web',
 ]
 
 AUTH_USER_MODEL = 'rbac.UserInfo'
