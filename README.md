@@ -1,7 +1,7 @@
 # research_sys
 
 ## About The Project
-
+The repository is archived and read-only, see new [gin-research-sys](https://github.com/Pandalzy/gin-research-sys)
 > Dynamic form, survey questionnaire backend system. Front-end repo: [vue-research-admin](https://github.com/Pandalzy/vue-research-admin)
 
 ### Api docs
